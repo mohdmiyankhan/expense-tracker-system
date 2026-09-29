@@ -1,0 +1,349 @@
+﻿body {
+    /*font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;*/
+    /*background-color: #f8fafc;*/
+    /*color: #111827;*/
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/*************** *************** *************** *************** ***************
+    Custom CSS
+*************** *************** *************** *************** ***************/
+
+/* Base Metric Card */
+.kpi-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 20px 24px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 30px -4px rgba(0, 0, 0, 0.08), 0 6px 10px -2px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Vertical Colored Indicator Bar on Left Edge */
+    .kpi-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+    }
+
+    /* Left Bar Theme Colors */
+    .kpi-card.theme-purple::before {
+        background-color: #5d50e6;
+    }
+
+    .kpi-card.theme-emerald::before {
+        background-color: #10b981;
+    }
+
+    .kpi-card.theme-amber::before {
+        background-color: #f59e0b;
+    }
+
+    .kpi-card.theme-info::before {
+        background-color: #0094ff;
+    }
+
+/* Icon Box Container */
+.kpi-icon-box {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+}
+
+    .kpi-icon-box svg {
+        width: 28px;
+        height: 28px;
+        stroke-width: 1.9;
+    }
+
+/* Icon Color Themes */
+.theme-purple .kpi-icon-box {
+    background-color: #eef0ff;
+    color: #5d50e6;
+}
+
+.theme-emerald .kpi-icon-box {
+    background-color: #e6f9f0;
+    color: #10b981;
+}
+
+.theme-amber .kpi-icon-box {
+    background-color: #fef3c7;
+    color: #f59e0b;
+}
+
+.theme-info .kpi-icon-box {
+    background-color: #e6f3ff;
+    color: #0094ff;
+}
+
+/* Content Area */
+.kpi-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Top Row: Title + Trend */
+.kpi-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 6px;
+}
+
+.kpi-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Trend Growth/Decline Indicators */
+.kpi-trend {
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+    .kpi-trend.trend-up {
+        color: #10b981;
+    }
+
+    .kpi-trend.trend-down {
+        color: #ef4444;
+    }
+
+/* Main Numeric Value */
+.kpi-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .kpi-card {
+        padding: 20px 16px;
+    }
+
+    .kpi-icon-box {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+        margin-right: 14px;
+    }
+
+    .kpi-value {
+        font-size: 20px;
+    }
+}
+
+/*************** user card CSS ***************/
+.user-card {
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.user-card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+}
+
+.user-card-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #172b4d;
+}
+
+.user-card-body {
+    padding: 20px;
+}
+
+.amount-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+    .amount-row span {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .amount-row strong {
+        color: #222;
+        font-size: 16px;
+    }
+
+.balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.receive-text {
+    color: #198754;
+    font-weight: 600;
+}
+
+.receive-amount {
+    color: #198754;
+}
+
+.pay-text {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.pay-amount {
+    color: #dc3545;
+}
+
+.settled-text {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/*************** table card CSS ***************/
+.table-card {
+    background: #fff;
+    border-radius: 16px;
+    /*margin-bottom: 25px;*/
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.table-card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+}
+
+.table-card-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #172b4d;
+}
+
+.table-card-body {
+    padding: 20px;
+}
+
+.expense-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+@media (max-width: 768px) {
+    .expense-table-scroll table {
+        min-width: 800px;
+    }
+}
+
+/*************** Tab card CSS ***************/
+.report-tab-box {
+    background: #fff;
+    border-radius: 16px;
+    /*margin-bottom: 25px;*/
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+    /* Tabs */
+    .report-tab-box .nav-tabs {
+        margin: 0;
+        padding: 0 10px;
+        background: #fafafa;
+        border-bottom: 1px solid #ddd;
+    }
+
+        /* Individual tab */
+        .report-tab-box .nav-tabs > li > a {
+            margin-right: 2px;
+            padding: 12px 18px;
+            color: #555;
+            border: 1px solid transparent;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        /* Active tab */
+        .report-tab-box .nav-tabs > li.active > a,
+        .report-tab-box .nav-tabs > li.active > a:hover,
+        .report-tab-box .nav-tabs > li.active > a:focus {
+            color: #333;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-bottom-color: #fff;
+            margin-bottom: -1px;
+        }
+
+    /* Content */
+    .report-tab-box .tab-content {
+        padding: 20px;
+        background: #fff;
+        min-height: 0px;
+    }

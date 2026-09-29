@@ -1,0 +1,111 @@
+﻿@model ExpenseTrackerSystem.Models.ViewModels.ExpenseVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Toast Message -->
+<style>
+    .custom-toast {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: fit-content;
+        max-width: 80%;
+        z-index: 9999;
+        border-radius: 4px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+        padding: 12px 15px 12px 15px;
+    }
+</style>
+@if (TempData["SuccessMsg"] != null)
+{
+    <div id="toast" class="custom-toast alert alert-success">
+        @TempData["SuccessMsg"]
+    </div>
+}
+@if (TempData["ErrorMsg"] != null)
+{
+    <div id="toast" class="custom-toast alert alert-danger">
+        @TempData["ErrorMsg"]
+    </div>
+}
+
+<h3>Add Expense</h3>
+
+@using (Html.BeginForm("Create", "Expense", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Title</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Amount</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Amount, new { @type = "number", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Paid By</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" value="@Session["UserName"]" readonly />
+                @*@Html.DropDownListFor(x => x.PaidById, Model.Users, "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PaidById, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">User Group</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => x.GroupId, Model.Groups, "Select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GroupId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Expense Date</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.ExpenseDate, "{0:yyyy-MM-ddTHH:mm:ss}", new { @type = "datetime-local", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ExpenseDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "History", "Expense")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#Amount").val("");
+        });
+
+        // Auto hide after 3 seconds
+        setTimeout(function () {
+            $("#toast").fadeOut(300);
+        }, 5000);
+    </script>
+}

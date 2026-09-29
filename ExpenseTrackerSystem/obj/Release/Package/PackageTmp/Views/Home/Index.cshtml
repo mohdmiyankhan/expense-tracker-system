@@ -1,0 +1,249 @@
+﻿@model IEnumerable<ExpenseTrackerSystem.Models.Expense>
+
+@{
+    ViewBag.Title = "Home";
+}
+
+@*<span class="kpi-trend trend-up">&#8593; +12.5%</span>*@
+@*<span class="kpi-trend trend-down">&#8595; -3%</span>*@
+
+<h3>Home</h3>
+
+<div>
+    <hr />
+
+    <!-- Cards -->
+    <div class="row">
+
+        <!-- Card 1: Total Expense -->
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="kpi-card theme-purple">
+
+                <!-- SVG Icon -->
+                <div class="kpi-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 5H17M6 9H17M9 5C12.5 5 14 6.5 14 9C14 11.5 12.5 13 9 13H6M9 13L17 20"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <!-- Content -->
+                <div class="kpi-content">
+
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total Expense</span>
+                    </div>
+
+                    <div class="kpi-value">
+                        ₹ @ViewBag.TotalExpense
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Card 3 : Total Entry -->
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="kpi-card theme-amber">
+
+                <!-- SVG Icon -->
+                <div class="kpi-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7h15a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+
+                        <path d="M21 11h-4a2 2 0 0 0 0 4h4"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round" />
+
+                        <circle cx="17" cy="13" r="0.7" fill="currentColor" />
+                    </svg>
+                </div>
+
+                <!-- Content -->
+                <div class="kpi-content">
+
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total Entry</span>
+                    </div>
+
+                    <div class="kpi-value">
+                        ₹ @ViewBag.TotalEntry
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Card 2 : Total Settlement -->
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="kpi-card theme-emerald">
+
+                <!-- SVG Icon -->
+                <div class="kpi-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7H17L14 4M17 7L14 10M20 17H7L10 14M7 17L10 20"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+
+                        <circle cx="17" cy="7" r="1" fill="currentColor" />
+                        <circle cx="7" cy="17" r="1" fill="currentColor" />
+                    </svg>
+                </div>
+
+                <!-- Content -->
+                <div class="kpi-content">
+
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total Settlement</span>
+                    </div>
+
+                    <div class="kpi-value">
+                        ₹ @ViewBag.TotalSettlement
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Card 4 : Total Users -->
+        <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="kpi-card theme-info">
+
+                <!-- SVG Icon -->
+                <div class="kpi-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="9" cy="8" r="3" stroke="currentColor" stroke-linecap="round" />
+
+                        <path d="M3 20C3 16.7 5.7 14 9 14C12.3 14 15 16.7 15 20M15 5.5C16 6 16.5 6.8 16.5 7.8C16.5 9.4 15.2 10.7 13.5 10.7M15 14C18.3 14 21 16.7 21 20"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <!-- Content -->
+                <div class="kpi-content">
+
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total User</span>
+                    </div>
+
+                    <div class="kpi-value">
+                        @ViewBag.User
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Expenses -->
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="table-card">
+                <div class="table-card-header">
+                    <span class="table-card-name">
+                        Recent Expenses
+                    </span>
+                </div>
+
+                <div class="table-card-body">
+                    <table class="table table-hover" style="margin-bottom: 0px !important;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Paid By</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.ExpenseDate.ToShortDateString()</td>
+                                        <td>@item.Title</td>
+                                        <td>@item.PaidBy.Name</td>
+                                        <td>₹ @Math.Round(item.Amount)</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="text-center">
+                                    <td colspan="4">No data.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-2">
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-2">
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>*@

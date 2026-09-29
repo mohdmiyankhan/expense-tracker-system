@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "Settle";
+}
+
+<h3>Settle</h3>
+<hr />
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <label class="control-label col-md-2"></label>
+        <div class="col-md-10">
+            <p>
+                Click here for Payment
+                &nbsp;
+                <a href="@ViewBag.PayNowUrl" class="btn btn-success btn-sm" target="_blank">Pay Now ₹@ViewBag.Amount</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2"></label>
+        <div class="col-md-10">
+            <p>
+                Click here for Settlement
+                &nbsp;
+                <a href="@ViewBag.SettlementUrl" class="btn btn-success btn-sm" target="_blank">Settle Now ₹@ViewBag.Amount</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+

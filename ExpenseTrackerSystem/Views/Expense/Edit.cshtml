@@ -1,0 +1,73 @@
+﻿@model ExpenseTrackerSystem.Models.ViewModels.ExpenseVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h3>Edit Expense</h3>
+
+@using (Html.BeginForm("Edit", "Expense", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Title</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Amount</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Amount, new { @type = "number", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Paid By</label>
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.PaidById)
+                <input type="text" class="form-control" value="@Session["UserName"]" readonly />
+                @*@Html.DropDownListFor(x => x.PaidById, Model.Users, "Select", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PaidById, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">User Group</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => x.GroupId, Model.Groups, "Select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GroupId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Expense Date</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.ExpenseDate, "{0:yyyy-MM-ddTHH:mm:ss}", new { @type = "datetime-local", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ExpenseDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "History", "Expense")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
