@@ -11,6 +11,8 @@ namespace ExpenseTrackerSystem.Controllers
         // GET: User
         public ActionResult Index()
         {
+            int a = 0, b = 4;
+            int res = a + b;
             return View();
         }
     }
