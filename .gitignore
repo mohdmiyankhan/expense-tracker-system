@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build folders
+bin/
+obj/
+
+# ASP.NET
+wwwroot/lib/
+
+# Logs
+*.log
+
+# Environment / local settings
+# appsettings.Development.json
+
+# OS
+.DS_Store
+Thumbs.db
