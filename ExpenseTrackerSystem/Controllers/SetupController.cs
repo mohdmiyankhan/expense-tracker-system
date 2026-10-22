@@ -3,7 +3,9 @@ using ExpenseTrackerSystem.Models;
 using ExpenseTrackerSystem.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace ExpenseTrackerSystem.Controllers
@@ -15,7 +17,6 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // STEP 1
         // =========================================================
-
         public ActionResult Index()
         {
             // If setup is already completed,
@@ -42,9 +43,7 @@ namespace ExpenseTrackerSystem.Controllers
 
             if (string.IsNullOrWhiteSpace(model.RoomName))
             {
-                ModelState.AddModelError(
-                    "RoomName",
-                    "Please enter room/group name.");
+                ModelState.AddModelError("RoomName", "Please enter room/group name.");
 
                 return View(model);
             }
@@ -58,7 +57,6 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // STEP 2 - ADD USERS
         // =========================================================
-
         public ActionResult Users()
         {
             var roomName = TempData["RoomName"] as string;
@@ -145,16 +143,13 @@ namespace ExpenseTrackerSystem.Controllers
                 // -------------------------------------------------
                 // Save users first
                 // -------------------------------------------------
-
                 var createdUsers = new List<SetupUserViewModel>();
 
                 foreach (var item in validUsers)
                 {
                     var name = item.Name.Trim();
 
-                    var existingUser = db.Users
-                        .FirstOrDefault(x =>
-                            x.Name.ToLower() == name.ToLower());
+                    var existingUser = db.Users.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
 
                     User user;
 
@@ -213,26 +208,21 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // STEP 3 - GENERATE GROUPS
         // =========================================================
-
         public ActionResult Groups()
         {
-            var users =
-                TempData["SetupUsers"]
-                as List<SetupUserViewModel>;
+            var users = TempData["SetupUsers"] as List<SetupUserViewModel>;
 
             if (users == null || users.Count < 2)
             {
                 return RedirectToAction("Users");
             }
 
-            var roomName =
-                TempData["RoomName"] as string;
+            var roomName = TempData["RoomName"] as string;
 
             TempData.Keep("SetupUsers");
             TempData.Keep("RoomName");
 
-            var groups =
-                GenerateCombinations(users);
+            var groups = GenerateCombinations(users);
 
             var model = new SetupViewModel
             {
@@ -248,7 +238,6 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // SAVE SELECTED GROUPS
         // =========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Groups(SetupViewModel model)
@@ -280,7 +269,6 @@ namespace ExpenseTrackerSystem.Controllers
                     // ---------------------------------------------
                     // Save selected groups
                     // ---------------------------------------------
-
                     foreach (var selectedGroup in model.Groups.Where(x => x.IsSelected))
                     {
                         var userIds = selectedGroup.UserIds.Distinct().ToList();
@@ -315,7 +303,6 @@ namespace ExpenseTrackerSystem.Controllers
                         // -----------------------------------------
                         // Save Group Members
                         // -----------------------------------------
-                        
                         foreach (var userId in userIds)
                         {
                             bool alreadyMember = db.UserGroupMembers.Any(x => x.GroupId == group.GroupId && x.UserId == userId);
@@ -363,7 +350,6 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // STEP 4 - COMPLETE
         // =========================================================
-
         public ActionResult Complete()
         {
             if (!IsSetupCompleted())
@@ -378,51 +364,29 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // COMBINATION GENERATOR
         // =========================================================
-
-        private List<GroupOptionViewModel>
-            GenerateCombinations(
-                List<SetupUserViewModel> users)
+        private List<GroupOptionViewModel> GenerateCombinations(List<SetupUserViewModel> users)
         {
-            var result =
-                new List<GroupOptionViewModel>();
+            var result = new List<GroupOptionViewModel>();
 
-            for (int size = 2;
-                 size <= users.Count;
-                 size++)
+            for (int size = 2; size <= users.Count; size++)
             {
-                GenerateCombinationRecursive(
-                    users,
-                    size,
-                    0,
-                    new List<SetupUserViewModel>(),
-                    result);
+                GenerateCombinationRecursive(users, size, 0, new List<SetupUserViewModel>(), result);
             }
 
             return result;
         }
 
-
-        private void GenerateCombinationRecursive(
-            List<SetupUserViewModel> users,
-            int targetSize,
-            int startIndex,
-            List<SetupUserViewModel> current,
-            List<GroupOptionViewModel> result)
+        private void GenerateCombinationRecursive(List<SetupUserViewModel> users, int targetSize, int startIndex, 
+            List<SetupUserViewModel> current, List<GroupOptionViewModel> result)
         {
             if (current.Count == targetSize)
             {
                 result.Add(
                     new GroupOptionViewModel
                     {
-                        GroupName =
-                            string.Join(
-                                " + ",
-                                current.Select(
-                                    x => x.Name.Trim())),
+                        GroupName = string.Join(" + ", current.Select(x => x.Name.Trim())),
 
-                        UserIds =
-                            current.Select(
-                                x => x.UserId).ToList(),
+                        UserIds = current.Select(x => x.UserId).ToList(),
 
                         IsSelected = false
                     });
@@ -430,21 +394,13 @@ namespace ExpenseTrackerSystem.Controllers
                 return;
             }
 
-            for (int i = startIndex;
-                 i < users.Count;
-                 i++)
+            for (int i = startIndex; i < users.Count; i++)
             {
                 current.Add(users[i]);
 
-                GenerateCombinationRecursive(
-                    users,
-                    targetSize,
-                    i + 1,
-                    current,
-                    result);
+                GenerateCombinationRecursive(users, targetSize, i + 1, current, result);
 
-                current.RemoveAt(
-                    current.Count - 1);
+                current.RemoveAt(current.Count - 1);
             }
         }
 
@@ -452,23 +408,17 @@ namespace ExpenseTrackerSystem.Controllers
         // =========================================================
         // SETUP STATUS
         // =========================================================
-
         private bool IsSetupCompleted()
         {
-            var value = System.Configuration.ConfigurationManager
-                .AppSettings["ExpenseTrackerSetupCompleted"];
+            var value = ConfigurationManager.AppSettings["ExpenseTrackerSetupCompleted"];
 
-            return string.Equals(
-                value,
-                "true",
-                StringComparison.OrdinalIgnoreCase);
+            return string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
         }
 
 
         // =========================================================
         // DASHBOARD REDIRECT
         // =========================================================
-
         private ActionResult RedirectToExpenseDashboard()
         {
             // IMPORTANT:
@@ -477,7 +427,6 @@ namespace ExpenseTrackerSystem.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
 
         protected override void Dispose(bool disposing)
         {
@@ -491,30 +440,22 @@ namespace ExpenseTrackerSystem.Controllers
 
         private void SetSetupCompleted()
         {
-            var config =
-                System.Web.Configuration.WebConfigurationManager
-                    .OpenWebConfiguration("~");
+            var config = WebConfigurationManager.OpenWebConfiguration("~");
 
-            var setting =
-                config.AppSettings.Settings[
-                    "ExpenseTrackerSetupCompleted"];
+            var setting = config.AppSettings.Settings["ExpenseTrackerSetupCompleted"];
 
             if (setting == null)
             {
-                config.AppSettings.Settings.Add(
-                    "ExpenseTrackerSetupCompleted",
-                    "true");
+                config.AppSettings.Settings.Add("ExpenseTrackerSetupCompleted", "true");
             }
             else
             {
                 setting.Value = "true";
             }
 
-            config.Save(
-                System.Configuration.ConfigurationSaveMode.Modified);
+            config.Save(ConfigurationSaveMode.Modified);
 
-            System.Configuration.ConfigurationManager
-                .RefreshSection("appSettings");
+            ConfigurationManager.RefreshSection("appSettings");
         }
     }
 }
