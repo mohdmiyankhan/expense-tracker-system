@@ -1,0 +1,73 @@
+﻿@model ExpenseTrackerSystem.Models.ViewModels.SetupViewModel
+
+@{
+    ViewBag.Title = "Select Groups";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <h3>Select Expense Groups</h3>
+
+    <p>
+        Room: <strong>@Model.RoomName</strong>
+    </p>
+
+    <p>
+        Select the combinations in which you want
+        to track expenses.
+    </p>
+
+    @using (Html.BeginForm("Groups", "Setup", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(x => x.RoomName)
+
+        <div class="row">
+
+            @for (int i = 0; i < Model.Groups.Count; i++)
+            {
+                <div class="col-md-6">
+
+                    <div class="panel panel-default">
+
+                        <div class="panel-body">
+
+                            <div class="checkbox">
+                                <label>
+                                    @Html.CheckBoxFor(x => x.Groups[i].IsSelected)
+
+                                    <strong>
+                                        @Model.Groups[i].GroupName
+                                    </strong>
+                                </label>
+                            </div>
+
+                            @Html.HiddenFor(x => x.Groups[i].GroupName)
+
+                            @foreach (var userId in Model.Groups[i].UserIds)
+                            {
+                                @Html.Hidden("Groups[" + i + "].UserIds", userId)
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <br />
+
+        <button type="submit" class="btn btn-success">
+            Save Groups & Continue
+        </button>
+    }
+
+</div>
+

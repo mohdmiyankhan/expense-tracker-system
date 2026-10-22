@@ -43,8 +43,7 @@ namespace ExpenseTrackerSystem.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        [Authorize]
+                
         public ActionResult Logout()
         {
             if (Session["UserId"] == null)

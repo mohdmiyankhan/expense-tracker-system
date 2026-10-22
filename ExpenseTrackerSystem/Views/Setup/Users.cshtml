@@ -1,0 +1,44 @@
+﻿@model ExpenseTrackerSystem.Models.ViewModels.SetupViewModel
+
+@{
+    ViewBag.Title = "Add Members";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Add Members</h3>
+
+<p>
+    Room: <strong>@Model.RoomName</strong>
+</p>
+
+@using (Html.BeginForm("Users", "Setup", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+
+        @Html.HiddenFor(x => x.RoomName)
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @for (int i = 0; i < Model.Users.Count; i++)
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2">
+                    Member @(i + 1)
+                </label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.Users[i].Name, new { @class = "form-control", placeholder = "Enter member name" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Generate Groups" class="btn btn-success" />
+            </div>
+        </div>
+
+    </div>
+}

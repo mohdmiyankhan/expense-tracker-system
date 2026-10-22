@@ -132,6 +132,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReminderController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Data\ExpenseDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -145,8 +146,11 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserGroupMember.cs" />
     <Compile Include="Models\ViewModels\ExpenseVM.cs" />
+    <Compile Include="Models\ViewModels\GroupOptionViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginVM.cs" />
     <Compile Include="Models\ViewModels\ReportVM.cs" />
+    <Compile Include="Models\ViewModels\SetupUserViewModel.cs" />
+    <Compile Include="Models\ViewModels\SetupViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +198,10 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Expense\Settle.cshtml" />
+    <Content Include="Views\Setup\Index.cshtml" />
+    <Content Include="Views\Setup\Users.cshtml" />
+    <Content Include="Views\Setup\Groups.cshtml" />
+    <Content Include="Views\Setup\Complete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
