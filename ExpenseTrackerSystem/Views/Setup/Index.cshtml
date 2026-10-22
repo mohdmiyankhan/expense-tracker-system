@@ -5,43 +5,347 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>Welcome to Expense Tracker</h3>
+<style>
+    .wizard-step {
+        min-height: 220px;
+    }
 
-<p>
-    Let's setup your room and members.
-</p>
+    .member-card {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fafafa;
+    }
 
-@using (Html.BeginForm("Index", "Setup", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+        .member-card h4 {
+            margin-top: 0;
+        }
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    .page-header {
+        margin-top: 20px;
+    }
 
-        <div class="form-group">
-            <label class="control-label col-md-2">
-                @Html.LabelFor(x => x.RoomName)
-            </label>
-            <div class="col-md-10">
-                @Html.TextBoxFor(x => x.RoomName, new { @class = "form-control", placeholder = "Example: EMDF" })
-                @Html.ValidationMessageFor(x => x.RoomName, "", new { @class = "text-danger" })
+    .progress {
+        height: 25px;
+    }
+
+    .progress-bar {
+        line-height: 25px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+            <div class="page-header">
+                <h3>Expense Tracker Setup</h3>
+                <p class="text-muted">
+                    Create your room and add members to get started.
+                </p>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Continue" class="btn btn-primary" />
-            </div>
-        </div>
+            @using (Html.BeginForm("Create", "Setup", FormMethod.Post, new { id = "setupForm" }))
+            {
+                @Html.AntiForgeryToken()
 
+                @*@Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })*@
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="progress">
+                    <div id="wizardProgress"
+                         class="progress-bar progress-bar-success"
+                         role="progressbar"
+                         style="width:33%">
+                        Step 1 of 3
+                    </div>
+                </div>
+
+                <!-- STEP 1: ROOM DETAILS -->
+                <div class="panel panel-primary wizard-step"
+                     id="step1">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Step 1: Room Details</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RoomName, "Room Name")
+
+                            @Html.TextBoxFor(m => m.RoomName, new { @class = "form-control", placeholder = "e.g. Flat A1", required = "required" })
+
+                            @Html.ValidationMessageFor(m => m.RoomName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.TotalMember, "Number of Members")
+
+                            @Html.TextBoxFor(x => x.TotalMember, new { @class = "form-control", placeholder = "e.g. 4" })
+                        </div>
+
+                        <button type="button"
+                                class="btn btn-primary pull-right"
+                                onclick="goToStep(2)">
+                            Next <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- STEP 2: MEMBERS -->
+                <div class="panel panel-primary wizard-step"
+                     id="step2" style="display:none">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Step 2: Add Members</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div id="usersContainer"></div>
+
+                        <hr />
+
+                        <button type="button"
+                                class="btn btn-default"
+                                onclick="goToStep(1)">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            Previous
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-primary pull-right"
+                                onclick="goToStep(3)">
+                            Review <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: REVIEW -->
+                <div class="panel panel-primary wizard-step"
+                     id="step3" style="display:none">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Step 3: Review & Create</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <h4>Room Information</h4>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Room Name</th>
+                                <td id="reviewRoom"></td>
+                            </tr>
+                            <tr>
+                                <th>Total Members</th>
+                                <td id="reviewCount"></td>
+                            </tr>
+                        </table>
+
+                        <h4>Members</h4>
+
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Mobile</th>
+                                    <th>UPI ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviewUsers"></tbody>
+                        </table>
+
+                        <button type="button"
+                                class="btn btn-default"
+                                onclick="goToStep(2)">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            Previous
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-success pull-right">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Finish Setup
+                        </button>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-}
+</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
+@section scripts {
     <script>
-        
+        $(document).ready(function () {
+            $("#TotalMember").val("");
+        });
+
+        $(function () {
+            renderUsers();
+            updateProgress(1);
+
+            $("#TotalMember").change(function () {
+                renderUsers();
+            });
+
+            $("#RoomName").on("input", function () {
+                clearError();
+            });
+        });
+
+        function renderUsers() {
+            var total = parseInt($("#TotalMember").val(), 10);
+            var html = "";
+
+            for (var i = 0; i < total; i++) {
+                html +=
+                    '<div class="member-card">' +
+                    '<h4>Member ' + (i + 1) + '</h4>' +
+
+                    '<div class="form-group">' +
+                    '<label>Name <span style="color: red;">*</span></label>' +
+                    '<input type="text" class="form-control member-name" ' +
+                    'name="Users[' + i + '].Name" required />' +
+                    '</div>' +
+
+                    '<div class="form-group">' +
+                    '<label>Username</label>' +
+                    '<input type="text" class="form-control" ' +
+                    'name="Users[' + i + '].Username" />' +
+                    '</div>' +
+
+                    '<div class="form-group">' +
+                    '<label>Mobile Number</label>' +
+                    '<input type="text" class="form-control" ' +
+                    'name="Users[' + i + '].MobileNo" />' +
+                    '</div>' +
+
+                    '<div class="form-group">' +
+                    '<label>UPI ID</label>' +
+                    '<input type="text" class="form-control" ' +
+                    'name="Users[' + i + '].UPIId" />' +
+                    '</div>' +
+                    '</div>';
+            }
+
+            $("#usersContainer").html(html);
+        }
+
+        function validateRoom() {
+            var roomName = $.trim($("#RoomName").val());
+
+            if (!roomName) {
+                alert("Please enter a room name.");
+                goToStep(1);
+                $("#RoomName").focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateUsers() {
+            var valid = true;
+
+            $(".member-name").each(function () {
+                if ($.trim($(this).val()) === "") {
+                    alert("Please enter the name of every member.");
+                    $(this).focus();
+                    valid = false;
+                    return false;
+                }
+            });
+
+            return valid;
+        }
+
+        function goToStep(step) {
+            if (step >= 2 && !validateRoom()) {
+                return;
+            }
+
+            if (step >= 3 && !validateUsers()) {
+                return;
+            }
+
+            if (step === 3) {
+                updateReview();
+            }
+
+            $(".wizard-step").hide();
+            $("#step" + step).show();
+
+            updateProgress(step);
+
+            $("html, body").animate({
+                scrollTop: $(".page-header").offset().top
+            }, 200);
+        }
+
+        function updateProgress(step) {
+            var percent = (step / 3) * 100;
+
+            $("#wizardProgress")
+                .css("width", percent + "%")
+                .text("Step " + step + " of 3");
+        }
+
+        function updateReview() {
+            $("#reviewRoom").text($("#RoomName").val());
+            $("#reviewCount").text($("#TotalMember").val());
+
+            var html = "";
+
+            $("#usersContainer .member-card").each(function (index) {
+                var name = $(this).find(
+                    '[name="Users[' + index + '].Name"]').val();
+
+                var username = $(this).find(
+                    '[name="Users[' + index + '].Username"]').val();
+
+                var mobile = $(this).find(
+                    '[name="Users[' + index + '].MobileNo"]').val();
+
+                var upi = $(this).find(
+                    '[name="Users[' + index + '].UPIId"]').val();
+
+                html += "<tr>" +
+                    "<td>" + (index + 1) + "</td>" +
+                    "<td>" + escapeHtml(name) + "</td>" +
+                    "<td>" + escapeHtml(username) + "</td>" +
+                    "<td>" + escapeHtml(mobile) + "</td>" +
+                    "<td>" + escapeHtml(upi) + "</td>" +
+                    "</tr>";
+            });
+
+            $("#reviewUsers").html(html);
+        }
+
+        function escapeHtml(value) {
+            return $("<div>").text(value || "").html();
+        }
+
+        function clearError() {
+            // Input validation is repeated when Next is clicked.
+        }
+
+        $("#setupForm").on("submit", function () {
+            if (!validateRoom() || !validateUsers()) {
+                return false;
+            }
+
+            return true;
+        });
     </script>
 }

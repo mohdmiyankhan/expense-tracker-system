@@ -1,0 +1,59 @@
+﻿@model ExpenseTrackerSystem.Models.ViewModels.SetupViewModel
+
+@{
+    ViewBag.Title = "Expense Tracker Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Welcome to Expense Tracker</h3>
+
+<p>
+    Let's setup your room/group and members.
+</p>
+
+@using (Html.BeginForm("Index", "Setup", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+                @Html.LabelFor(x => x.RoomName)
+            </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.RoomName, new { @class = "form-control", placeholder = "Example: EMDF" })
+                @Html.ValidationMessageFor(x => x.RoomName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+                @Html.LabelFor(x => x.TotalMember)
+            </label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.TotalMember, new { @class = "form-control", placeholder = "Example: 4" })
+                @Html.ValidationMessageFor(x => x.TotalMember, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Continue" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#TotalMember").val("");
+        });
+    </script>
+}

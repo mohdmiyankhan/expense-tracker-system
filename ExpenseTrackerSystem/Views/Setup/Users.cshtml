@@ -8,7 +8,7 @@
 <h3>Add Members</h3>
 
 <p>
-    Room: <strong>@Model.RoomName</strong>
+    Room / Group Name: <strong>@Model.RoomName</strong>, &nbsp; Member: <strong>@Model.TotalMember</strong>
 </p>
 
 @using (Html.BeginForm("Users", "Setup", FormMethod.Post))
@@ -19,6 +19,7 @@
         <hr />
 
         @Html.HiddenFor(x => x.RoomName)
+        @Html.HiddenFor(x => x.TotalMember)
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

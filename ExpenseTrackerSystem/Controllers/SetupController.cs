@@ -49,6 +49,7 @@ namespace ExpenseTrackerSystem.Controllers
             }
 
             TempData["RoomName"] = model.RoomName.Trim();
+            TempData["TotalMember"] = model.TotalMember;
 
             return RedirectToAction("Users");
         }
@@ -60,6 +61,7 @@ namespace ExpenseTrackerSystem.Controllers
         public ActionResult Users()
         {
             var roomName = TempData["RoomName"] as string;
+            int totalMember = Convert.ToInt32(TempData["TotalMember"]);
 
             if (string.IsNullOrWhiteSpace(roomName))
             {
@@ -67,19 +69,15 @@ namespace ExpenseTrackerSystem.Controllers
             }
 
             TempData.Keep("RoomName");
+            TempData.Keep("TotalMember");
 
-            var model = new SetupViewModel
+            SetupViewModel model = new SetupViewModel();
+            model.RoomName = roomName;
+            model.TotalMember = totalMember;
+            for (int i = 0; i < totalMember; i++)
             {
-                RoomName = roomName,
-
-                Users = new List<SetupUserViewModel>
-                {
-                    new SetupUserViewModel(),
-                    new SetupUserViewModel(),
-                    new SetupUserViewModel(),
-                    new SetupUserViewModel()
-                }
-            };
+                model.Users.Add(new SetupUserViewModel());
+            }
 
             return View(model);
         }
@@ -90,10 +88,15 @@ namespace ExpenseTrackerSystem.Controllers
         public ActionResult Users(SetupViewModel model)
         {
             var roomName = model.RoomName;
+            int totalMember = model.TotalMember;
 
             if (string.IsNullOrWhiteSpace(roomName))
             {
                 roomName = TempData["RoomName"] as string;
+            }
+            if (totalMember == 0)
+            {
+                totalMember = Convert.ToInt32(TempData["TotalMember"]);
             }
 
             if (string.IsNullOrWhiteSpace(roomName))
@@ -118,6 +121,7 @@ namespace ExpenseTrackerSystem.Controllers
                 ModelState.AddModelError("", "At least 2 members are required.");
 
                 model.RoomName = roomName;
+                model.TotalMember = totalMember;
 
                 return View(model);
             }
@@ -134,6 +138,7 @@ namespace ExpenseTrackerSystem.Controllers
                 ModelState.AddModelError("", "Member names must be unique.");
 
                 model.RoomName = roomName;
+                model.TotalMember = totalMember;
 
                 return View(model);
             }
@@ -191,6 +196,7 @@ namespace ExpenseTrackerSystem.Controllers
 
                 TempData["RoomName"] = roomName;
                 TempData["SetupUsers"] = createdUsers;
+                TempData["TotalMember"] = totalMember;
 
                 return RedirectToAction("Groups");
             }
@@ -199,6 +205,7 @@ namespace ExpenseTrackerSystem.Controllers
                 ModelState.AddModelError("", "Unable to save members: " + ex.Message);
 
                 model.RoomName = roomName;
+                model.TotalMember = totalMember;
 
                 return View(model);
             }
@@ -218,15 +225,18 @@ namespace ExpenseTrackerSystem.Controllers
             }
 
             var roomName = TempData["RoomName"] as string;
+            int totalMember = Convert.ToInt32(TempData["TotalMember"]);
 
             TempData.Keep("SetupUsers");
             TempData.Keep("RoomName");
+            TempData.Keep("TotalMember");
 
             var groups = GenerateCombinations(users);
 
             var model = new SetupViewModel
             {
                 RoomName = roomName,
+                TotalMember = totalMember,
                 Users = users,
                 Groups = groups
             };
@@ -250,12 +260,14 @@ namespace ExpenseTrackerSystem.Controllers
             }
 
             var roomName = TempData["RoomName"] as string;
+            int totalMember = Convert.ToInt32(TempData["TotalMember"]);
 
             if (model.Groups == null || !model.Groups.Any(x => x.IsSelected))
             {
                 ModelState.AddModelError("", "Please select at least one group.");
 
                 model.RoomName = roomName;
+                model.TotalMember = totalMember;
                 model.Users = users;
                 model.Groups = GenerateCombinations(users);
 
@@ -337,6 +349,7 @@ namespace ExpenseTrackerSystem.Controllers
                     ModelState.AddModelError("", "Unable to save groups: " + ex.Message);
 
                     model.RoomName = roomName;
+                    model.TotalMember = totalMember;
                     model.Users = users;
 
                     model.Groups = GenerateCombinations(users);
